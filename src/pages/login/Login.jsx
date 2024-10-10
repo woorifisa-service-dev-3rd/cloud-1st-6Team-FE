@@ -1,17 +1,22 @@
 import { useGoogleLogin } from '@react-oauth/google';
 import GoogleLoginButton from '../../../components/GoogleButton';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+  const navigator = useNavigate();
+
   const googleLogin = useGoogleLogin({
-    flow: 'auth-code',
+    flow: "auth-code",
     onSuccess: async (codeResponse) => {
-        const tokens = await axios.post(
+        const response = await axios.post(
             'http://localhost:8080/api/auth/login', {
                 authCode: codeResponse.code,
             });
 
-        console.log(tokens);
+        if (response.status === "200") {
+          navigator("/");
+        }
     },
     onError: errorResponse => console.log(errorResponse),
   });
