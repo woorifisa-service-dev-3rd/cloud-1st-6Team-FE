@@ -1,35 +1,19 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import GptMain from "./components/GptMain"; // GptMain 컴포넌트 import
+import GptResponse from "./components/GptResponse"; // GptResponse 컴포넌트 import
+import DefaultLayout from "./layouts/DefaultLayout"; // DefaultLayout import
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<DefaultLayout><h1>홈 페이지</h1></DefaultLayout>} />
+        <Route path="/gpt-main" element={<GptMain />} /> {/* GptMain 페이지 경로 추가 */}
+        <Route path="/gpt-response" element={<GptResponse />} /> {/* GptResponse 페이지 경로 추가 */}
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
