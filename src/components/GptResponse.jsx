@@ -15,7 +15,7 @@ const GptResponse = () => {
                         <h2>추천 결과</h2>
                         <div className="response-data">
                             <img src={data?.image} alt="추천 음식" className="food-image" />
-                            <p className="food-response">{data?.response}</p>
+                            <p className="food-response">{data?.content}</p>
                         </div>
                     </>
                 ) : (
