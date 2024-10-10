@@ -60,43 +60,41 @@ const GptMain = () => {
     
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
-        // GPT API 호출을 위한 POST 요청
+
         const requestBody = {
-            prompt: `${age}, ${mood}, ${gender}, ${foodType}`,
+            prompt: `나는 ${age}살 이야, 나의 현재 기분은 ${mood}이야, 나의 성별은 ${gender}이야, 내가 먹고싶은 음식의 종류는 ${foodType}이야, 지금의 날씨는 ${weatherDescription}이고, 현재 온도는 ${temperature}이야`,
         };
-    
-        // 로컬 스토리지 또는 상태에서 토큰 가져오기 (예: JWT 토큰)
-        const token = localStorage.getItem("token"); // 로컬 스토리지에서 'token' 키로 저장된 토큰 가져오기
-    
+
+        const token = localStorage.getItem("token");
+
         try {
             const response = await fetch("https://localhost:8080/api/food-recommendation", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`, // Authorization 헤더에 토큰 추가
+                    "Authorization": `Bearer ${token}`,
                 },
-                body: JSON.stringify(requestBody), // requestBody를 JSON 형식으로 변환하여 전송
+                body: JSON.stringify(requestBody),
             });
-    
-            const data = await response.json(); // 응답을 JSON으로 파싱
-            
+
+            const data = await response.json();
+
             if (data.status === "200") {
-                // 응답이 성공적일 경우 GptResponse 페이지로 네비게이션
                 navigate("/gpt-response", { state: data });
             } else {
-                console.error(data.msg); // 오류 메시지 출력
+                setErrorMessage(data.msg);
             }
         } catch (error) {
             console.error("Error:", error);
+            setErrorMessage("서버와 연결할 수 없습니다.");
         }
     };
-    
 
     return (
         <DefaultLayout>
             <div className="gpt-main-container">
                 <h2>개점메추</h2>
+                {errorMessage && <p className="error-message">{errorMessage}</p>}
                 <form onSubmit={handleSubmit}>
                     <div className="input-group">
                         <label htmlFor="age">나이</label>
@@ -107,7 +105,7 @@ const GptMain = () => {
                             onChange={(e) => setAge(e.target.value)}
                             placeholder="나이를 입력하세요"
                             required
-                            min="1"
+                            min={1}
                         />
                     </div>
 
