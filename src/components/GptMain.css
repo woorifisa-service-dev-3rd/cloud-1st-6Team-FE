@@ -22,11 +22,12 @@ h2 {
 }
 
 input[type="number"] {
-    width: 100%;
+    width: 90%;
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    text-align: center; /* 가운데 정렬 추가 */
 }
 
 .button-group {
@@ -46,12 +47,12 @@ button {
 }
 
 button.selected {
-    background-color: #007bff;
+    background-color: #9dd84b;
     color: white;
 }
 
 button:hover {
-    background-color: #007bff;
+    background-color: #9dd84b;
     color: white;
 }
 

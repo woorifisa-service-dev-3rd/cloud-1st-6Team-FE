@@ -48,7 +48,7 @@ const GptMain = () => {
     return (
         <DefaultLayout>
             <div className="gpt-main-container">
-                <h2>음식 추천</h2>
+                <h2>개점메추</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="input-group">
                         <label htmlFor="age">나이</label>
