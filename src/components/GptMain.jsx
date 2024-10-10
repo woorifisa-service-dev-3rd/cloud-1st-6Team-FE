@@ -1,54 +1,100 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // 네비게이션을 위한 import 추가
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import DefaultLayout from "../layouts/DefaultLayout";
-import "./GptMain.css"; // CSS 파일 따로 관리
+import "./GptMain.css";
+import axios from "axios"; // axios import 추가
 
 const GptMain = () => {
     const [age, setAge] = useState("");
     const [mood, setMood] = useState("");
     const [gender, setGender] = useState("");
     const [foodType, setFoodType] = useState("");
-    const navigate = useNavigate(); // navigate 훅 사용
+    const [errorMessage, setErrorMessage] = useState("");
+    const navigate = useNavigate();
 
+    const API_KEY = import.meta.env.VITE_API_KEY; // Vite 환경 변수에서 API 키 가져오기
+
+
+
+    const getWeather = async (lat, lon) => {
+        try {
+            const res = await axios.get(
+                `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+            );
+            const weatherDescription = res.data.weather[0].description;
+            const temperature = res.data.main.temp;
+
+            // 날씨 정보 콘솔 출력
+            console.log(`현재 위치: ${lat}, ${lon}`);
+            console.log(`날씨: ${weatherDescription}`);
+            console.log(`온도: ${temperature}°C`);  
+        } catch (err) {
+            console.error("날씨 정보를 가져오는 중 오류 발생:", err);
+            setErrorMessage("날씨 정보를 가져오는 데 실패했습니다."); // 오류 메시지 설정
+        }
+    };
+    useEffect(() => {
+        let isMounted = true; // 컴포넌트가 마운트 상태인지 확인
+    
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                if (isMounted) {
+                    let lat = position.coords.latitude;
+                    let lon = position.coords.longitude;
+                    getWeather(lat, lon); // 현재 위치의 날씨 정보를 가져오는 함수 호출
+                }
+            },
+            (error) => {
+                if (isMounted) {
+                    console.error("Geolocation error:", error);
+                    setErrorMessage("위치 정보를 가져오는 데 실패했습니다.");
+                }
+            }
+        );
+    
+        // cleanup 함수에서 마운트 상태 변경
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
-        // GPT API 호출을 위한 POST 요청
+
         const requestBody = {
             prompt: `${age},${mood},${gender},${foodType}`,
         };
-    
-        // 로컬 스토리지 또는 상태에서 토큰 가져오기 (예: JWT 토큰)
-        const token = localStorage.getItem("token"); // 로컬 스토리지에서 'token' 키로 저장된 토큰 가져오기
-    
+
+        const token = localStorage.getItem("token");
+
         try {
             const response = await fetch("https://localhost:8080/api/food-recommendation", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`, // Authorization 헤더에 토큰 추가
+                    "Authorization": `Bearer ${token}`,
                 },
-                body: JSON.stringify(requestBody), // requestBody를 JSON 형식으로 변환하여 전송
+                body: JSON.stringify(requestBody),
             });
-    
-            const data = await response.json(); // 응답을 JSON으로 파싱
-            
+
+            const data = await response.json();
+
             if (data.status === "200") {
-                // 응답이 성공적일 경우 GptResponse 페이지로 네비게이션
                 navigate("/gpt-response", { state: data });
             } else {
-                console.error(data.msg); // 오류 메시지 출력
+                setErrorMessage(data.msg);
             }
         } catch (error) {
             console.error("Error:", error);
+            setErrorMessage("서버와 연결할 수 없습니다.");
         }
     };
-    
 
     return (
         <DefaultLayout>
             <div className="gpt-main-container">
                 <h2>개점메추</h2>
+                {errorMessage && <p className="error-message">{errorMessage}</p>}
                 <form onSubmit={handleSubmit}>
                     <div className="input-group">
                         <label htmlFor="age">나이</label>
