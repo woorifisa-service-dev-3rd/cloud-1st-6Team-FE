@@ -19,7 +19,7 @@ const Login = () => {
           );
 
         if (response.status < 400) {
-          navigator("/");
+          navigator("/gpt-main");
         }
     },
     onError: errorResponse => console.log(errorResponse),
