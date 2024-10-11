@@ -1,6 +1,8 @@
-import React from 'react'
+import axios from 'axios'
+import { useEffect } from 'react'
 
 const NotFound = () => {
+
   return (
     <div>NotFound</div>
   )

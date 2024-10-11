@@ -10,11 +10,15 @@ const Login = () => {
     flow: "auth-code",
     onSuccess: async (codeResponse) => {
         const response = await axios.post(
-            'http://localhost:8080/api/auth/login', {
+            `${import.meta.env.VITE_SERVER_URL}/api/auth/login`, {
                 authCode: codeResponse.code,
-            });
+            },
+            {
+              withCredentials: "true"
+            }
+          );
 
-        if (response.status === "200") {
+        if (response.status < 400) {
           navigator("/");
         }
     },
