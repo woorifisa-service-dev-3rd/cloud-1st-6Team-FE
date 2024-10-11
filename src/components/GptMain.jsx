@@ -69,7 +69,7 @@ const GptMain = () => {
 
         console.log(requestBody.prompt);
         try {
-            const response = await fetch("http://localhost:8080/api/food-recommendation", {
+            const response = await fetch("http://43.200.253.127:8080/record", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
