@@ -10,7 +10,7 @@ const GptResponse = () => {
     return (
         <DefaultLayout>
             <div className="gpt-response-container">
-                {status === "200" ? ( // 상태가 200일 경우
+                {status === 201 ? ( // 상태가 201일 경우
                     <>
                         <h2>추천 결과</h2>
                         <div className="response-data">
@@ -19,7 +19,7 @@ const GptResponse = () => {
                         </div>
                     </>
                 ) : (
-                    <h2>오류가 발생했습니다: {msg}</h2> // 상태가 200이 아닐 경우 오류 메시지 표시
+                    <h2>오류가 발생했습니다: {msg}</h2> // 상태가 201이 아닐 경우 오류 메시지 표시
                 )}
                 <button onClick={() => navigate("/gpt-main")} className="back-button">
                     다시 선택하기
